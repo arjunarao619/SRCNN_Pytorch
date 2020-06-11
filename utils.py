@@ -34,27 +34,20 @@ def apply_gaussian_kernel(img,sigma):
 
     return blurred
 def centre_crop(img,scale):
-    transform_data = transforms.Compose
-    (
-        [
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-        ]
-    )
+    
     crop = transforms.CenterCrop(((img.size[1]//scale)*scale,(img.size[0]//scale)*scale))
     img = crop(img)
     return img
     
 
 
-if (__name__ == "__main__"):
-#         for img_path in sorted(glob.glob('{}/*'.format(train_dir))):
-#             if(img_path != '.DS_Store'):
-#                 img = pil.open(img_path).convert('RGB')
-                # blurred = apply_gaussian_kernel(img,0.73) #sigma in paper was 0.55. We increase kernel size for Holopix50k
-                # blurred.save("blurred.png")
-                # break;
-                # img = centre_crop(img,3)
-                # img.save("cropped.png")
-                # break;
-    
+# if (__name__ == "__main__"):
+        # for img_path in sorted(glob.glob('{}/*'.format(train_dir))):
+        # if(img_path != '.DS_Store'):
+        #     img = pil.open(img_path).convert('RGB')
+        #     blurred = apply_gaussian_kernel(img,0.73) #sigma in paper was 0.55. We increase kernel size for Holopix50k
+        #     blurred.save("blurred.png")
+        #     break;
+        #     img = centre_crop(img,3)
+        #     img.save("cropped.png")
+        #     break;
