@@ -3,6 +3,7 @@ import PIL.Image as pil
 from PIL import ImageFilter as pilfilter
 import os
 import torch
+import time
 import glob
 import h5py
 import torchvision
@@ -14,7 +15,7 @@ from utils import apply_gaussian_kernel,rgb_to_y,centre_crop
 
 
 
-def transform_dataset(scale, hrlr,patch,stride,output_path):
+def transform_dataset(scale,patch,stride,output_path):
     train_dir = "/home/ec2-user/arjun/SRCNN_pytorch/Holopix50k/train_mini" #only 91 images 
     temp_list = []
     lr_patches = []
@@ -39,6 +40,7 @@ def transform_dataset(scale, hrlr,patch,stride,output_path):
         lr = np.asarray(lr).astype(np.float32)
         hr = rgb_to_y(hr)
         lr = rgb_to_y(lr)
+        
 
         '''
         patches of size = 231 along the Y channel are extracted with a stride = 98
@@ -49,14 +51,8 @@ def transform_dataset(scale, hrlr,patch,stride,output_path):
                 lr_patches.append(lr[i:i + patch, j:j + patch])
                 hr_patches.append(hr[i:i + patch, j:j + patch])
                 print("LR : " + str(len(lr_patches)) + " HR: " + str(len(hr_patches)))
-                #from IPython import embed;embed()
-
-#         if(len(lr_patches) % 50 == 0):
-#             temp_patch_lr = np.array(lr_patches)
-#             temp_path_hr = np.array(hr_patches)
-#             from IPython import embed;embed()
-#             h5_file.create_dataset('lr_' + str(len(lr_patches)),data = temp_patch_lr)
-#             h5_file.create_dataset('hr_' + str(len(hr_patches)),data = temp_patch_hr)
+                if(len(lr_patches) % 300000 == 0): #primitive attempts to prevent overheating
+                     time.sleep(4)
             
 
     lr_patches = np.array(lr_patches)
@@ -69,7 +65,16 @@ def transform_dataset(scale, hrlr,patch,stride,output_path):
 
     h5_file.close()    
 
+'''
+final patch is a square image with shape = (patch,patch)
+
+maximum patch size = img.width/2 - 1
+maximum stride = img.height
+where img is the original image
+Setting patch and stride as their maximum values results in getting two patches per image - left and right patch
 
 
-transform_dataset(3,'lr',231,98,"output/train.h5")#patch and stride are chosen according to Holopix50k's image size
+'''
+
+transform_dataset(3,115,45,"output/train.h5")#patch and stride are chosen according to Holopix50k's image size
 
