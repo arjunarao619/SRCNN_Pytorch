@@ -6,6 +6,8 @@ import glob
 import torchvision.transforms as transforms
 from PIL import ImageFilter as IF
 import cv2
+import torch
+import math
 
 train_dir = "/Volumes/Transcend/Holopix50k/Holopix50k/train/left" #stored dataset in external hard-drive
 
@@ -39,15 +41,34 @@ def centre_crop(img,scale):
     img = crop(img)
     return img
     
+def psnr(original, compressed): 
+    mse = torch.mean((original - compressed) ** 2) 
+    if(mse == 0):  # MSE is zero means no noise is present in the signal .# Therefore PSNR have no importance. 
+        return 100
+    max_pixel = 255.0
+    psnr = 20 * math.log10(max_pixel / math.sqrt(mse)) 
+    return psnr 
 
 
 # if (__name__ == "__main__"):
-        # for img_path in sorted(glob.glob('{}/*'.format(train_dir))):
+#     hr = pil.open('images/hr.png').convert('RGB')
+#     lr = pil.open('images/lr.png').convert('RGB')
+#     transform = transforms.Compose(
+#         [
+#             transforms.ToTensor()
+#         ]
+#     )
+#     lr = transform(lr)
+#     hr = transform(hr)
+#     print(psnr(lr,hr))
+
+
+    # for img_path in sorted(glob.glob('{}/*'.format(train_dir))):
         # if(img_path != '.DS_Store'):
         #     img = pil.open(img_path).convert('RGB')
         #     blurred = apply_gaussian_kernel(img,0.73) #sigma in paper was 0.55. We increase kernel size for Holopix50k
         #     blurred.save("blurred.png")
         #     break;
-        #     img = centre_crop(img,3)
-        #     img.save("cropped.png")
-        #     break;
+    #     img = centre_crop(img,3)
+    #     img.save("cropped.png")
+    #     break;
