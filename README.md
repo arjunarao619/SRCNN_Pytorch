@@ -1,6 +1,6 @@
 # SRCNN Pytorch Implementation
 
-### Implementation of [https://arxiv.org/abs/1501.00092](arXiv) - Image Super-Resolution Using Deep Convolutional Networks ([Original Caffe Model](http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)) on Holopix50k Stereo Dataset
+### Implementation of [https://arxiv.org/abs/1501.00092](https://arxiv.org/abs/1501.00092) - Image Super-Resolution Using Deep Convolutional Networks ([Original Caffe Model](http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)) on Holopix50k Stereo Dataset
 
 ### Requirements:
 * Pytorch > 1.4.0
