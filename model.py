@@ -11,9 +11,9 @@ in_channels = 1 as we only consider luminance
 class SRCNN_915(nn.Module):
     def __init__(self,device=torch.device('cpu')):
         super(SRCNN_915,self).__init__()
-        self.conv1 = nn.Conv2d(1,64,kernel_size = 9, padding=int(9/2))
-        self.conv2 = nn.Conv2d(64,32,kernel_size = 1,padding= int(1/2))
-        self.conv3 = nn.Conv2d(32,1,kernel_size = 5, padding = int(5/2))
+        self.conv1 = nn.Conv2d(1,64,kernel_size = 9, padding=9//2)
+        self.conv2 = nn.Conv2d(64,32,kernel_size = 1,padding= 1)
+        self.conv3 = nn.Conv2d(32,1,kernel_size = 5, padding = 5//2)
         
     def forward(self,Y):
         Y = F.relu((self.conv1(Y)),inplace = True)
@@ -24,9 +24,9 @@ class SRCNN_915(nn.Module):
 class SRCNN_955(nn.Module):
     def __init__(self,device=torch.device('cpu')):
         super(SRCNN_955,self).__init__()
-        self.conv1 = nn.Conv2d(1,64,kernel_size = 9,padding=int(9/2))
-        self.conv2 = nn.Conv2d(64,32,kernel_size = 5,padding=int(5/2))
-        self.conv3 = nn.Conv2d(32,1,kernel_size = 5,padding=int(5/2))
+        self.conv1 = nn.Conv2d(1,64,kernel_size = 9,padding=9//2)
+        self.conv2 = nn.Conv2d(64,32,kernel_size = 5,padding=5//2)
+        self.conv3 = nn.Conv2d(32,1,kernel_size = 5,padding=5//2)
     def forward(self,Y):
         Y = F.relu((self.conv1(Y)),inplace = True)
         Y = F.relu((self.conv2(Y)),inplace = True)

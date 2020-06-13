@@ -8,7 +8,7 @@ from PIL import ImageFilter as IF
 import cv2
 import torch
 import math
-import pytorch_ssim
+import utils.pytorch_ssim
 #from pytorch_msssim import ssim, ms_ssim, SSIM, MS_SSIM
 
 train_dir = "/Volumes/Transcend/Holopix50k/Holopix50k/train/left" #stored dataset in external hard-drive
@@ -47,32 +47,32 @@ def psnr(original, compressed):
     return psnr 
 
 
-if __name__ == "__main__":
-    transform1 = transforms.Compose([
-            transforms.ToTensor()
-        ]
-    )
-    '''
-    Sanity check for MSSIM and SSIM score
-    '''
-    hr = pil.open('../images/hr.png').convert('RGB')
-    lr = pil.open('../images/lr.png').convert('RGB')
-    lr = transform1(lr)
-    hr = transform1(hr)
-    print(pytorch_ssim.ssim(torch.unsqueeze(lr,0),torch.unsqueeze(hr,0)))
-    '''
-    Sanity Check for PSNR (Peak Signal to Noise Ratio) score
-    '''
-    hr = pil.open('../images/hr.png').convert('RGB')
-    lr = pil.open('../images/lr.png').convert('RGB')
-    lr = transform1(lr)
-    hr = transform1(hr)
-    print(psnr(lr,hr))
-    '''
-    To check Gaussian Kernel effect. Output at </output/lr.png>
-    '''
-    img_path = '../images/hr.png'
-    img = pil.open(img_path).convert('RGB')
-    blurred = apply_gaussian_kernel(img,0.73) #sigma in paper was 0.55. We increase kernel size for Holopix50k
-    blurred.save("../images/blurred.png")
+# if __name__ == "__main__":
+#     transform1 = transforms.Compose([
+#             transforms.ToTensor()
+#         ]
+#     )
+'''
+Sanity check for MSSIM and SSIM score
+'''
+#     hr = pil.open('../images/hr.png').convert('RGB')
+#     lr = pil.open('../images/lr.png').convert('RGB')
+#     lr = transform1(lr)
+#     hr = transform1(hr)
+#     print(pytorch_ssim.ssim(torch.unsqueeze(lr,0),torch.unsqueeze(hr,0)))
+'''
+Sanity Check for PSNR (Peak Signal to Noise Ratio) score
+'''
+#     hr = pil.open('../images/hr.png').convert('RGB')
+#     lr = pil.open('../images/lr.png').convert('RGB')
+#     lr = transform1(lr)
+#     hr = transform1(hr)
+#     print(psnr(lr,hr))
+'''
+To check Gaussian Kernel effect. Output at </output/lr.png>
+'''
+#     img_path = '../images/hr.png'
+#     img = pil.open(img_path).convert('RGB')
+#     blurred = apply_gaussian_kernel(img,0.73) #sigma in paper was 0.55. We increase kernel size for Holopix50k
+#     blurred.save("../images/blurred.png")
     

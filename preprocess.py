@@ -83,7 +83,9 @@ maximum stride = img.height
 where img is the original image
 Setting patch and stride as their maximum values results in getting two patches per image - left and right patch
 '''
-
+OUTPUTS_DIR = 'output'
+if not os.path.exists(OUTPUTS_DIR):
+	os.makedirs(OUTPUTS_DIR)
 transform_dataset(3,33,14,"output/train_small.h5","train")#patch and stride are chosen according to Holopix50k's image size
 transform_dataset(3,33,14,"output/val_small.h5","validation")
 

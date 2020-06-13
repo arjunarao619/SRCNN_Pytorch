@@ -139,19 +139,30 @@ while(epoch < max_epoch):
                 '''
                 calculating psnr,msim for every iteration is expensive. Can calculate for every 500 iterations
                 '''
-                if(iteration % 500 == 0):                           
+                if(iteration % 100 == 0):                           
                     psnr_score = psnr(inputs,outputs)
                     writer.add_scalar('psnr_train',psnr_score)
+                    ssim_score = utils.pytorch_ssim.ssim(inputs,outputs) #calculated in batches of batch_size
+                    writer.add_scalar('ssim_train',ssim_score.item())
+
                     
                 t.set_postfix(loss='{:.6f}'.format(loss.item()))
                 t.update(len(inputs))
                 
                 if(phase == 'validation'):
-                    if(iteration % 100 == 0):
+                    if(iteration % 50 == 0): 
                         psnr_score = psnr(inputs,outputs)
                         writer.add_scalar('psnr_validation',psnr_score)
-                        
-   
+                        ssim_score = utils.pytorch_ssim.ssim(inputs,outputs) #calculated in batches of batch_size
+                        writer.add_scalar('ssim_validation',ssim_score.item())
+                    if(iteration % 200 == 0):
+                        grid_inputs = torchvision.utils.make_grid(inputs)
+                        writer.add_image('Input LR',grid_inputs)
+                        grid_outputs = torchvision.utils.make_grid(outputs)
+                        writer.add_image('Output HR',grid_outputs)
+                        grid_gt = torchvision.utils.make_grid(labels)
+                        writer.add_image('Ground Truth HR',grid_gt)
+
     epoch+=1
     if(epoch % 5 == 0): #saving weights every 5 epochs
         torch.save(model.state_dict(), os.path.join(saved_weights_dir, '_epoch_{}.pth'.format(epoch)))
