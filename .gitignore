@@ -1,3 +1,9 @@
 91/
 Set5/
 holopix50k/
+__pycache__
+*.pyc
+logs/
+output/
+train_mini/
+val_mini/

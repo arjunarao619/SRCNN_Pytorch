@@ -17,3 +17,16 @@ class TrainDataset(Dataset):
     def __len__(self):
         with h5py.File(self.h5_file, 'r') as f:
             return len(f['lr'])
+
+class EvalDataset(Dataset):
+    def __init__(self, h5_file):
+        super(EvalDataset, self).__init__()
+        self.h5_file = h5_file
+
+    def __getitem__(self, idx):
+        with h5py.File(self.h5_file, 'r') as f:
+            return np.expand_dims(f['lr'][str(idx)][:, :] / 255., 0), np.expand_dims(f['hr'][str(idx)][:, :] / 255., 0) #difference is we return Cb and Cr channels to perform evaluation. Only Y channel is fed to SR model
+
+    def __len__(self):
+        with h5py.File(self.h5_file, 'r') as f:
+            return len(f['lr'])
