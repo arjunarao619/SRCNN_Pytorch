@@ -6,9 +6,11 @@ import torch
 import time
 import glob
 import h5py
+import sys
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
+from tqdm.auto import trange
 import skimage.io as io
 import torch.utils.data as data
 from utils.utils import apply_gaussian_kernel,rgb_to_y,centre_crop
@@ -17,8 +19,8 @@ from utils.utils import apply_gaussian_kernel,rgb_to_y,centre_crop
 
 def transform_dataset(scale,patch,stride,output_path,trainorval):
     #train_dir = "/home/ec2-user/arjun/SRCNN_pytorch/Holopix50k/train_mini" #only 91 images 
-    train_dir = "91"
-    val_dir = "Set5"
+    train_dir = "/research/d2/arao/Holopix50k/train/left" #
+    val_dir = "/research/d2/arao/Holopix50k/val/left"
     temp_list = []
     lr_patches = []
     hr_patches = []
@@ -60,20 +62,29 @@ def transform_dataset(scale,patch,stride,output_path,trainorval):
             for j in range(0, lr.shape[1] - patch + 1, stride):
                 lr_patches.append(lr[i:i + patch, j:j + patch])
                 hr_patches.append(hr[i:i + patch, j:j + patch])
-                print("LR : " + str(len(lr_patches)) + " HR: " + str(len(hr_patches)))
-                # if(len(lr_patches) % 300000 == 0): #primitive attempts to prevent overheating
-                #      time.sleep(4)
+                print("LR : " + str(len(lr_patches)) + " HR: " + str(len(hr_patches)),end = '\r')
+                if(len(lr_patches) == 24000): #specify here required number of sub-images. Recommended 500,000 train, 90,000 val
+                    lr_patches = np.array(lr_patches)
+                    hr_patches = np.array(hr_patches)
+                    
+                    print(lr_patches.shape)
+
+                    h5_file.create_dataset('lr',data = lr_patches)
+                    h5_file.create_dataset('hr',data = hr_patches)
+                    h5_file.close()
+                    return
+
             
 
-    lr_patches = np.array(lr_patches)
-    hr_patches = np.array(hr_patches)
+    # lr_patches = np.array(lr_patches)
+    # hr_patches = np.array(hr_patches)
     
-    print(lr_patches.shape)
+    # print(lr_patches.shape)
 
-    h5_file.create_dataset('lr',data = lr_patches)
-    h5_file.create_dataset('hr',data = hr_patches)    
+    # h5_file.create_dataset('lr',data = lr_patches)
+    # h5_file.create_dataset('hr',data = hr_patches)    
 
-    h5_file.close()    
+    # h5_file.close()    
 
 '''
 final patch is a square image with shape = (patch,patch)
@@ -86,6 +97,6 @@ Setting patch and stride as their maximum values results in getting two patches 
 OUTPUTS_DIR = 'output'
 if not os.path.exists(OUTPUTS_DIR):
 	os.makedirs(OUTPUTS_DIR)
-transform_dataset(3,33,14,"output/train_small.h5","train")#patch and stride are chosen according to Holopix50k's image size
-transform_dataset(3,33,14,"output/val_small.h5","validation")
+done = transform_dataset(3,120,72,"output/train_holopix50k_small.h5","train")#patch and stride are chosen according to Holopix50k's image size
+transform_dataset(3,120,72,"output/val_holopix50k_small.h5","validation")
 

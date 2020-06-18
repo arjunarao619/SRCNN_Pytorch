@@ -5,7 +5,6 @@ import PIL.Image as pil
 import glob
 from torchvision import transforms
 from PIL import ImageFilter as IF
-import cv2
 import torch
 import math
 import utils.pytorch_ssim
@@ -45,7 +44,36 @@ def psnr(original, compressed):
     max_pixel = 255.0
     psnr = 20 * math.log10(max_pixel / math.sqrt(mse)) 
     return psnr 
+def ycbcr_to_rgb(img):
+    if type(img) == np.ndarray:
+        r = 298.082 * img[:, :, 0] / 256. + 408.583 * img[:, :, 2] / 256. - 222.921
+        g = 298.082 * img[:, :, 0] / 256. - 100.291 * img[:, :, 1] / 256. - 208.120 * img[:, :, 2] / 256. + 135.576
+        b = 298.082 * img[:, :, 0] / 256. + 516.412 * img[:, :, 1] / 256. - 276.836
+        return np.array([r, g, b]).transpose([1, 2, 0])
+    elif type(img) == torch.Tensor:
+        if len(img.shape) == 4:
+            img = img.squeeze(0)
+        r = 298.082 * img[0, :, :] / 256. + 408.583 * img[2, :, :] / 256. - 222.921
+        g = 298.082 * img[0, :, :] / 256. - 100.291 * img[1, :, :] / 256. - 208.120 * img[2, :, :] / 256. + 135.576
+        b = 298.082 * img[0, :, :] / 256. + 516.412 * img[1, :, :] / 256. - 276.836
+        return torch.cat([r, g, b], 0).permute(1, 2, 0)
+    else:
+        raise Exception('Unknown Type', type(img))
+class AverageMeter(object):
+    def __init__(self):
+        self.reset()
 
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
 
 # if __name__ == "__main__":
 #     transform1 = transforms.Compose([
