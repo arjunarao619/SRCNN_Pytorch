@@ -12,9 +12,10 @@ import utils.utils
 
 
 
-def eval(weights,image_path,range_epochs,scale = 3):
+def eval(image_path,range_epochs,scale = 3):
     cudnn.benchmark = True
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 
     model = SRCNN_955().to(device)
     for i in range(0,range_epochs):
@@ -32,6 +33,7 @@ def eval(weights,image_path,range_epochs,scale = 3):
 
         image_width = (image.width // scale) * scale
         image_height = (image.height // scale) * scale
+        original_img = image.copy()
         image = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
         image = image.resize((image.width // scale, image.height // scale), resample=pil_image.BICUBIC)
         image = image.resize((image.width * scale, image.height * scale), resample=pil_image.BICUBIC)
@@ -47,9 +49,8 @@ def eval(weights,image_path,range_epochs,scale = 3):
 
         with torch.no_grad():
             preds = model(y).clamp(0.0, 1.0)
-
-        psnr = utils.utils.psnr(y, preds)
-        print('PSNR_SRCNN_epoch{}: {:.2f}'.format(i, psnr))
+        psnr_score = utils.utils.psnr(preds,y)
+        print('PSNR_SRCNN_epoch{}: {:.2f}'.format(i, psnr_score))
 
         transform1 = transforms.Compose([
             transforms.ToTensor()
@@ -60,14 +61,10 @@ def eval(weights,image_path,range_epochs,scale = 3):
         output = np.array([preds, ycbcr[..., 1], ycbcr[..., 2]]).transpose([1, 2, 0])
         output = np.clip(utils.utils.ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
         output = pil_image.fromarray(output)
-        output.save(image_path.replace('.', '_srcnn_x{}.'.format(scale)))
+        output.save(image_path.replace('.', '_srcnn_x{}.'.format(i)))
 
-        bicubic_img = pil_image.open('results/lr_bicubic_x3.png').convert('RGB')
-        #srcnn_img = pil_image.open('results/lr_srcnn_x3.png').convert('RGB')
-        #from IPython import embed;embed()
-        psnr_bicubic = utils.utils.psnr(transform1(bicubic_img),y)
-        print('PSNR_BICUBIC_epoch{}: {:.2f}'.format(i,psnr_bicubic))
+        
 
 
 
-eval('saved_weights/x3/epoch_103.pth','results/lr.png',6)
+eval('results/original3.png',24)
