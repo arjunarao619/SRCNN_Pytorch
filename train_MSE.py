@@ -143,6 +143,9 @@ for epoch in range(max_epoch):
         with torch.no_grad():
             preds = model(inputs).clamp(0.0,1.0)
 
+        '''
+        Adding image grids slows dows the execution. Uncomment this block if you wish to log output images in Tensorboard
+        '''
         # grid_inputs = torchvision.utils.make_grid(inputs)
         # writer.add_image('Input LR',grid_inputs)
         # grid_outputs = torchvision.utils.make_grid(preds)

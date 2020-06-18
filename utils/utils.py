@@ -59,35 +59,21 @@ def ycbcr_to_rgb(img):
         return torch.cat([r, g, b], 0).permute(1, 2, 0)
     else:
         raise Exception('Unknown Type', type(img))
-class AverageMeter(object):
-    def __init__(self):
-        self.reset()
 
-    def reset(self):
-        self.val = 0
-        self.avg = 0
-        self.sum = 0
-        self.count = 0
-
-    def update(self, val, n=1):
-        self.val = val
-        self.sum += val * n
-        self.count += n
-        self.avg = self.sum / self.count
 
 # if __name__ == "__main__":
-#     transform1 = transforms.Compose([
-#             transforms.ToTensor()
-#         ]
-#     )
+    # transform1 = transforms.Compose([
+    #         transforms.ToTensor()
+    #     ]
+    # )
 '''
 Sanity check for MSSIM and SSIM score
 '''
-#     hr = pil.open('../images/hr.png').convert('RGB')
-#     lr = pil.open('../images/lr.png').convert('RGB')
-#     lr = transform1(lr)
-#     hr = transform1(hr)
-#     print(pytorch_ssim.ssim(torch.unsqueeze(lr,0),torch.unsqueeze(hr,0)))
+    # hr = pil.open('../results/coffee_srcnn_30.png').convert('RGB')
+    # lr = pil.open('../results/coffee_bicubic_30.png').convert('RGB')
+    # lr = transform1(lr)
+    # hr = transform1(hr)
+    # print(pytorch_ssim.ssim(torch.unsqueeze(lr,0),torch.unsqueeze(hr,0)))
 '''
 Sanity Check for PSNR (Peak Signal to Noise Ratio) score
 '''

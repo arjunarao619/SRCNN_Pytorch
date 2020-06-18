@@ -37,7 +37,8 @@ def eval(image_path,range_epochs,scale = 3):
         image = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
         image = image.resize((image.width // scale, image.height // scale), resample=pil_image.BICUBIC)
         image = image.resize((image.width * scale, image.height * scale), resample=pil_image.BICUBIC)
-        image.save(image_path.replace('.', '_bicubic_x{}.'.format(scale)))
+        if(i == 30):
+            image.save(image_path.replace('.', '_bicubic_{}.'.format(epoch)))
 
         image = np.array(image).astype(np.float32)
         ycbcr = utils.utils.rgb_to_ycbcr(image)
@@ -50,8 +51,9 @@ def eval(image_path,range_epochs,scale = 3):
         with torch.no_grad():
             preds = model(y).clamp(0.0, 1.0)
         psnr_score = utils.utils.psnr(preds,y)
-        print('PSNR_SRCNN_epoch{}: {:.2f}'.format(i, psnr_score))
-
+        ssim_score = utils.pytorch_ssim.ssim(preds,y)
+        print('PSNR_SRCNN_epoch{}: {:.2f} | SSIM_SRCNN_epoch{}: {:.2f}'.format(i, psnr_score,i,ssim_score))
+        
         transform1 = transforms.Compose([
             transforms.ToTensor()
             ])
@@ -61,10 +63,15 @@ def eval(image_path,range_epochs,scale = 3):
         output = np.array([preds, ycbcr[..., 1], ycbcr[..., 2]]).transpose([1, 2, 0])
         output = np.clip(utils.utils.ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
         output = pil_image.fromarray(output)
-        output.save(image_path.replace('.', '_srcnn_x{}.'.format(i)))
-
+        if(i == 30 or i == 0):
+            output.save(image_path.replace('.', '_srcnn_{}.'.format(i)))
+    
         
 
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--image_path',type = str, required=True)
+    args = parser.parse_args()
 
-eval('results/original3.png',24)
+    eval(args.image_path,91)#Second parameter generates PSNR and SSIM from 0 to chosen n

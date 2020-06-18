@@ -16,13 +16,122 @@
 
 ### Dataset
 
-Instructions to download Holopix50k can be found on [Holopix50k repository](https://github.com/leiainc/holopix50k) ([Paper](https://arxiv.org/abs/2003.11172)). Training on 1500 images of Holopix50k with 113 X 74 patch and stride yields ~110,000 patches. Random crop patches can be decreased by altering size in `preprocess.py`. Output dataset is stored at `output/<dataset.h5>`
+Instructions to download Holopix50k can be found on [Holopix50k repository](https://github.com/leiainc/holopix50k) ([Paper](https://arxiv.org/abs/2003.11172)). Training on 5000 images of Holopix50k with 120 X 78 patch and stride yields ~500,000 patches of size `(120 X 120)`. Random crop patches can be decreased by altering size in `preprocess.py`. Output dataset is stored at `output/<dataset.h5>`
 
-### Todo
-* Save filters during training
+**Note:**  Our crop sizes are significantly higher than original paper's size. Authors train with a crop size of 33 and stride 14, resulting in ~ 24,000 images from the 91-image dataset which has average resolution of `(180X150)`. Moreover, we apply a gaussian kernel of a higher standard deviation (0.55 in paper vs 0.73 ours) Hence, our input images have a much lower quality compared to the original implementation and make our training more challenging.
+
+### Model
+SRCNN 9-5-5 was chosen due to nature of large resolution. 
+Chosen Network Settings: <a href="https://www.codecogs.com/eqnedit.php?latex={&space;f&space;}_{&space;1&space;}=9,{&space;f&space;}_{&space;2&space;}=5,{&space;f&space;}_{&space;3&space;}=5,{&space;n&space;}_{&space;1&space;}=64,{&space;n&space;}_{&space;2&space;}=32,{&space;n&space;}_{&space;3&space;}=1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?{&space;f&space;}_{&space;1&space;}=9,{&space;f&space;}_{&space;2&space;}=5,{&space;f&space;}_{&space;3&space;}=5,{&space;n&space;}_{&space;1&space;}=64,{&space;n&space;}_{&space;2&space;}=32,{&space;n&space;}_{&space;3&space;}=1" title="{ f }_{ 1 }=9,{ f }_{ 2 }=5,{ f }_{ 3 }=5,{ n }_{ 1 }=64,{ n }_{ 2 }=32,{ n }_{ 3 }=1" /></a>.
+
+### Training
+
+Training was performed under paper conditions for 100 epochs using MSE Loss as training loss. Training was stopped when Validation PSNR flattened at ~80.10. 
+
+SSIM was calculated during eval. Similarity score peaked at 0.99, thus suggesting that SSIM is not reliable for SR tasks.
+
+## Saved Weights
+
+Saved Weights can be downloaded [here](https://drive.google.com/file/d/1JUfM9vzzaSlyVS3_4xACBEwZv1FFSuhC/view?usp=sharing)
+
+### Results
+
+<table>
+    <tr>
+        <td><center>Synthesized Low Res Image</center></td>
+        <td><center>BICUBIC (X3)</center></td>
+        <td><center>SRCNN (X3) , PSNR ~= 87.30</center></td>
+        <td><center>Original</center></td>
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/coffee_srcnn_0.png""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/coffee_bicubic_30.png"></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/coffee_srcnn_30.png"></center>
+    	</td>
+        <td>
+    		<center><img src="./results/coffee.png"></center>
+    	</td>
+    </tr>
+    <tr>
+        <td><center>Synthesized Low Res Image</center></td>
+        <td><center>BICUBIC (X3)</center></td>
+        <td><center>SRCNN (X3) , PSNR ~= 82.10</center></td>
+        <td><center>Original</center></td>
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/flower_srcnn_0.png""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/flower_bicubic_30.png"></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/flower_srcnn_30.png"></center>
+    	</td>
+        <td>
+    		<center><img src="./results/flower.png"></center>
+    	</td>
+    </tr>
+    <tr>
+        <td><center>Synthesized Low Res Image</center></td>
+        <td><center>BICUBIC (X3)</center></td>
+        <td><center>SRCNN (X3) , PSNR ~= 84.21</center></td>
+        <td><center>Original</center></td>
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/doggie_srcnn_0.png""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/doggie_bicubic_30.png"></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/doggie_srcnn_30.png"></center>
+    	</td>
+        <td>
+    		<center><img src="./results/doggie.png"></center>
+    	</td>
+    </tr>
+      <tr>
+        <td><center>Synthesized Low Res Image</center></td>
+        <td><center>BICUBIC (X3)</center></td>
+        <td><center>SRCNN (X3) , PSNR ~= 85.53</center></td>
+        <td><center>Original</center></td>
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/child_srcnn_0.jpg""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/child_bicubic_30.jpg"></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/child_srcnn_30.jpg"></center>
+    	</td>
+        <td>
+    		<center><img src="./results/child.jpg"></center>
+    	</td>
+    </tr>
+</table>
+
+### Visualized Filters
+
+We visualize our trained Conv filters of size `(9X9)`. We can identify that some filters are edge vs texture detectors. This is reflective of the original implementation's findings.
+<div style="text-align: center">
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/75PgrGR4/fil.png' border='0'  alt='filters'/></a>
+</div>
+
+### TODO
+* ~~Save filters during training~~
 * Add accelerated SRCNN model with deconvolutions
-* Train with SSIM, MSSIM, PSNR opposed to MSE Loss specified in paper
+* ~~Train with SSIM, MSSIM, PSNR opposed to MSE Loss specified in paper~~
 * Pretrain Y channel and CB, Cr channels for better results
+* Train with Stereo Attention Module to get more inter-view context information [(https://ieeexplore.ieee.org/document/8998204)](https://ieeexplore.ieee.org/document/8998204)
 
 
 
