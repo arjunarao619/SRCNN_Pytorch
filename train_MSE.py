@@ -131,6 +131,7 @@ for epoch in range(max_epoch):
 
             t.set_postfix
 
+
             t.set_postfix(loss='{:.6f}'.format(loss.item()))
             t.update(len(input))
             writer.add_scalar('loss',loss.item())

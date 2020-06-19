@@ -30,11 +30,15 @@ Training was performed under paper conditions for 100 epochs using MSE Loss as t
 
 SSIM was calculated during eval. Similarity score peaked at 0.99, thus suggesting that SSIM is not reliable for SR tasks.
 
+
+
+
 ## Saved Weights
 
-Saved Weights can be downloaded [here](https://drive.google.com/file/d/1JUfM9vzzaSlyVS3_4xACBEwZv1FFSuhC/view?usp=sharing)
+* Saved Weights for training using original MSE Loss can be downloaded [here](https://drive.google.com/file/d/1JUfM9vzzaSlyVS3_4xACBEwZv1FFSuhC/view?usp=sharing)
+* Saved weights for training using our weighted loss can be downloaded [here](https://drive.google.com/file/d/1Jq-fWU-htYqMfIs6jTl1Rk8oFzUrWgAn/view?usp=sharing)
 
-### Results
+### Results 
 
 <table>
     <tr>
@@ -119,9 +123,66 @@ Saved Weights can be downloaded [here](https://drive.google.com/file/d/1JUfM9vzz
     </tr>
 </table>
 
-### Visualized Filters
+### Experiments
 
-We visualize our trained Conv filters of size `(9X9)`. We can identify that some filters are edge vs texture detectors. This is reflective of the original implementation's findings.
+We have also trained using a weighted loss function from 3 image reconstruction metrics
+* Structural Similarity Index (SSIM)
+* Peak Signal-to-Noise Ratio (PSNR)
+* Mean Square Error (MSE)
+
+We have weighted these according to result priority. Our current weighting is:
+
+<img src="https://latex.codecogs.com/gif.latex?w_1 * SSIM + w_2 * PSNR + w_3 * MSE =\text { Loss } , w_1 = 0.1,w_2 = 0.5, w_3 = 0.4 " /> 
+
+We have also trained out model using <img src="https://latex.codecogs.com/gif.latex? 1- PSNR  " /> as a loss function. Below are our results:
+
+* **Weighted Loss:** We are able to reduce the heavy gaussian blurring with our weighted loss at the cost of loosing slight structural information.
+* **PSNR Loss:** (Ongoing Training)
+	### Training with Weighted Loss
+
+	<table>
+    <tr>
+        <td><center>MSE Trained Result</center></td>
+        <td><center>Weighted Trained Result</center></td>
+        
+		
+        
+
+        
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/child_srcnn_30.jpg""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/child_srcnn_weighted_47.jpg"></center>
+    	</td>
+    	
+        
+    </tr>
+    <tr>
+        <td><center>MSE Trained Result</center></td>
+        <td><center>Weighted Trained Result</center></td>
+        
+        
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/flower_srcnn_30.png""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/flower_srcnn_weighted_47.png"></center>
+    	</td>  
+    </tr>
+   
+  
+</table>
+
+
+
+### Visualized Filters (Optional)
+
+We visualize our trained Conv filters of size `(9X9)` (Trained with MSE Loss). We can identify that some filters are edge vs texture detectors. This is reflective of the original implementation's findings.
 <div style="text-align: center">
 <a href='https://i.postimg.cc/75PgrGR4/fil.png' target='_blank'><img src='https://i.postimg.cc/75PgrGR4/fil.png' border='0'  alt='filters'/></a>
 </div>

@@ -37,8 +37,8 @@ def eval(image_path,range_epochs,scale = 3):
         image = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
         image = image.resize((image.width // scale, image.height // scale), resample=pil_image.BICUBIC)
         image = image.resize((image.width * scale, image.height * scale), resample=pil_image.BICUBIC)
-        if(i == 0):
-            image.save(image_path.replace('.', '_bicubic_weighted_{}.'.format(epoch)))
+        #if(i == 0):
+         #   image.save(image_path.replace('.', '_bicubic_weighted_{}.'.format(epoch)))
 
         image = np.array(image).astype(np.float32)
         ycbcr = utils.utils.rgb_to_ycbcr(image)
