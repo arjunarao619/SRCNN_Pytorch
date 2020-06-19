@@ -131,13 +131,15 @@ We have also trained using a weighted loss function from 3 image reconstruction 
 * Mean Square Error (MSE)
 
 We have weighted these according to result priority. Our current weighting is:
+<div style="text-align: center">
+<a href='https://i.postimg.cc/75PgrGR4/fil.png' target='_blank'><img src='./results/eq.png' border='0'  alt='filters'/></a>
+</div>
 
-<img src="https://latex.codecogs.com/gif.latex?w_1 * SSIM + w_2 * PSNR + w_3 * MSE =\text { Loss } , w_1 = 0.1,w_2 = 0.5, w_3 = 0.4 " /> 
 
-We have also trained out model using <img src="https://latex.codecogs.com/gif.latex? 1- PSNR  " /> as a loss function. Below are our results:
+We have also trained out model using Peak Signal-to-Noise Ratio (PSNR Score)  as a loss function. Below are our results:
 
 * **Weighted Loss:** We are able to reduce the heavy gaussian blurring with our weighted loss at the cost of loosing slight structural information.
-* **PSNR Loss:** (Ongoing Training)
+* **PSNR Loss:** Similar results as weighted loss.
 	### Training with Weighted Loss
 
 	<table>
@@ -203,7 +205,7 @@ We visualize our trained Conv filters of size `(9X9)` (Trained with MSE Loss). W
 * Add accelerated SRCNN model with deconvolutions
 * ~~Train with SSIM, MSSIM, PSNR opposed to MSE Loss specified in paper~~
 * Pretrain Y channel and CB, Cr channels for better results
-* Train with Stereo Attention Module to get more inter-view context information [(https://ieeexplore.ieee.org/document/8998204)](https://ieeexplore.ieee.org/document/8998204)
+
 
 
 
