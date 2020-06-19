@@ -42,7 +42,7 @@ def psnr(original, compressed):
     if(mse == 0):  # MSE is zero means no noise is present in the signal .# Therefore PSNR have no importance. 
         return 100
     max_pixel = 255.0
-    psnr = 20 * math.log10(max_pixel / math.sqrt(mse)) 
+    psnr = 20 * torch.log10(max_pixel / torch.sqrt(mse))
     return psnr 
 def ycbcr_to_rgb(img):
     if type(img) == np.ndarray:

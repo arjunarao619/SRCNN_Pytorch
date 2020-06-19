@@ -144,11 +144,7 @@ We have also trained out model using <img src="https://latex.codecogs.com/gif.la
     <tr>
         <td><center>MSE Trained Result</center></td>
         <td><center>Weighted Trained Result</center></td>
-        
-		
-        
-
-        
+ 
     </tr>
     <tr>
     	<td>
@@ -157,14 +153,11 @@ We have also trained out model using <img src="https://latex.codecogs.com/gif.la
     	<td>
     		<center><img src="./results/child_srcnn_weighted_47.jpg"></center>
     	</td>
-    	
-        
+ 
     </tr>
     <tr>
         <td><center>MSE Trained Result</center></td>
-        <td><center>Weighted Trained Result</center></td>
-        
-        
+        <td><center>Weighted Trained Result</center></td> 
     </tr>
     <tr>
     	<td>
@@ -174,11 +167,29 @@ We have also trained out model using <img src="https://latex.codecogs.com/gif.la
     		<center><img src="./results/flower_srcnn_weighted_47.png"></center>
     	</td>  
     </tr>
-   
-  
-</table>
+	</table>
+	
+	### Training on PSNR Only
 
-
+	We observed very similar results to our weighted loss after using 1-PSNR as a loss function. Please Zoom in to see slight structural changes. 
+	<table>
+	<tr>
+        <td><center>MSE Trained Result</center></td>
+        <td><center>PSNR Trained Result</center></td> 
+		<td><center>Original</center></td> 
+    </tr>
+    <tr>
+    	<td>
+    		<center><img src="./results/idol_srcnn_mse_90.jpg""></center>
+    	</td>
+    	<td>
+    		<center><img src="./results/idol_srcnn_psnr_9.jpg"></center>
+    	</td>  
+		<td>
+    		<center><img src="./results/idol.jpg"></center>
+    	</td> 
+    </tr>
+	</table>
 
 ### Visualized Filters (Optional)
 

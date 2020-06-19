@@ -101,6 +101,9 @@ dataloaders = {'train': train_dataloader,'validation':val_dataloader}
 epoch = 0
 best_loss = 100000
 resume_train = True
+'''
+Uncomment the below line to train with MSE loss function
+'''
 #criterion = nn.MSELoss().cuda()
 
 transform = transforms.Compose(
@@ -122,8 +125,16 @@ for epoch in range(max_epoch):
             labels = labels.to(device)
 
             preds = model(input)
-            loss = weighted_loss.weighted_loss(preds,labels)
-            epoch_loss += loss.item()/input.size(0)
+            '''
+            change the below line to one of the three:
+            1. loss = criterion(preds,labels)
+            2. loss = weighted_loss.weighted_loss(preds,labels)
+            3. loss = 1.00000 - utils.utils.psnr(preds,labels)
+            '''
+
+            loss = 100.00000 - utils.utils.psnr(preds,labels) 
+            
+            epoch_loss += loss/input.size(0)
 
             optimizer.zero_grad()
             loss.backward()
@@ -132,9 +143,9 @@ for epoch in range(max_epoch):
             t.set_postfix
 
 
-            t.set_postfix(loss='{:.6f}'.format(loss.item()))
+            t.set_postfix(loss='{:.6f}'.format(loss))
             t.update(len(input))
-            writer.add_scalar('loss',loss.item())
+            writer.add_scalar('loss',loss)
 
     model.eval()
     val_psnr_list = 0.0
