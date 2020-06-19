@@ -20,7 +20,7 @@ def eval(image_path,range_epochs,scale = 3):
     model = SRCNN_955().to(device)
     for i in range(0,range_epochs):
 
-        checkpoint = torch.load('saved_weights/testing/epoch_{}.pth'.format(i),map_location=torch.device(device))
+        checkpoint = torch.load('saved_weights/weighted/epoch_{}.pth'.format(i),map_location=torch.device(device))
         model.load_state_dict(checkpoint['model_state_dict'])
         epoch = checkpoint['epoch']
         
@@ -37,8 +37,8 @@ def eval(image_path,range_epochs,scale = 3):
         image = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
         image = image.resize((image.width // scale, image.height // scale), resample=pil_image.BICUBIC)
         image = image.resize((image.width * scale, image.height * scale), resample=pil_image.BICUBIC)
-        if(i == 30):
-            image.save(image_path.replace('.', '_bicubic_{}.'.format(epoch)))
+        if(i == 0):
+            image.save(image_path.replace('.', '_bicubic_weighted_{}.'.format(epoch)))
 
         image = np.array(image).astype(np.float32)
         ycbcr = utils.utils.rgb_to_ycbcr(image)
@@ -63,8 +63,8 @@ def eval(image_path,range_epochs,scale = 3):
         output = np.array([preds, ycbcr[..., 1], ycbcr[..., 2]]).transpose([1, 2, 0])
         output = np.clip(utils.utils.ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
         output = pil_image.fromarray(output)
-        if(i == 30 or i == 0):
-            output.save(image_path.replace('.', '_srcnn_{}.'.format(i)))
+        if(i == 47):
+            output.save(image_path.replace('.', '_srcnn_weighted_{}.'.format(i)))
     
         
 
@@ -74,4 +74,4 @@ if __name__ == '__main__':
     parser.add_argument('--image_path',type = str, required=True)
     args = parser.parse_args()
 
-    eval(args.image_path,91)#Second parameter generates PSNR and SSIM from 0 to chosen n
+    eval(args.image_path,48)#Second parameter generates PSNR and SSIM from 0 to chosen n

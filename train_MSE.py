@@ -28,6 +28,8 @@ from tqdm import tqdm
 from tensorboardX import SummaryWriter
 import utils.pytorch_ssim
 
+import weighted_loss
+
 ########### TensorboardX ###########
 LOG_DIR = './logs/'
 
@@ -99,7 +101,7 @@ dataloaders = {'train': train_dataloader,'validation':val_dataloader}
 epoch = 0
 best_loss = 100000
 resume_train = True
-criterion = nn.MSELoss().cuda()
+#criterion = nn.MSELoss().cuda()
 
 transform = transforms.Compose(
     [
@@ -120,7 +122,7 @@ for epoch in range(max_epoch):
             labels = labels.to(device)
 
             preds = model(input)
-            loss = criterion(preds,labels)
+            loss = weighted_loss.weighted_loss(preds,labels)
             epoch_loss += loss.item()/input.size(0)
 
             optimizer.zero_grad()
@@ -165,10 +167,7 @@ for epoch in range(max_epoch):
         'model_state_dict': model.state_dict(), 
         'optimizer_state_dict': optimizer.state_dict(),
         'val_psnr': psnr1,
-    },os.path.join('saved_weights/testing', 'epoch_{}.pth'.format(epoch)))
-
-
-
+    },os.path.join('saved_weights/weighted', 'epoch_{}.pth'.format(epoch)))
 
 
 

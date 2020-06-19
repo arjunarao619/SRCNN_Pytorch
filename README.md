@@ -123,7 +123,7 @@ Saved Weights can be downloaded [here](https://drive.google.com/file/d/1JUfM9vzz
 
 We visualize our trained Conv filters of size `(9X9)`. We can identify that some filters are edge vs texture detectors. This is reflective of the original implementation's findings.
 <div style="text-align: center">
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/75PgrGR4/fil.png' border='0'  alt='filters'/></a>
+<a href='https://i.postimg.cc/75PgrGR4/fil.png' target='_blank'><img src='https://i.postimg.cc/75PgrGR4/fil.png' border='0'  alt='filters'/></a>
 </div>
 
 ### TODO
